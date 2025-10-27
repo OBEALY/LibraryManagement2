@@ -1,7 +1,6 @@
 using LibraryManagement.Models;
 using LibraryManagement.Repositories;
 using System;
-using System.Collections.Generic;
 
 namespace LibraryManagement.Services;
 
@@ -11,22 +10,31 @@ public class AuthorService
 
     public AuthorService(IAuthorRepository repo) => _repo = repo;
 
-    public IEnumerable<Author> GetAll() => _repo.GetAll();
-    public Author? GetById(int id) => _repo.GetById(id);
+    public Task<IEnumerable<Author>> GetAllAsync() => _repo.GetAllAsync();
+    public Task<Author?> GetByIdAsync(int id) => _repo.GetByIdAsync(id);
 
-    public Author Add(Author author)
+    public async Task<Author> AddAsync(Author author)
     {
         if (string.IsNullOrWhiteSpace(author.Name))
             throw new ArgumentException("Имя автора не может быть пустым.");
-        return _repo.Add(author);
+
+        return await _repo.AddAsync(author);
     }
 
-    public bool Update(Author author)
+    public async Task<bool> UpdateAsync(Author author)
     {
         if (string.IsNullOrWhiteSpace(author.Name))
             throw new ArgumentException("Имя автора не может быть пустым.");
-        return _repo.Update(author);
+
+        return await _repo.UpdateAsync(author);
     }
 
-    public bool Delete(int id) => _repo.Delete(id);
+    public Task<bool> DeleteAsync(int id) => _repo.DeleteAsync(id);
+
+    // Новые методы для LINQ-запросов
+    public Task<IEnumerable<Author>> GetAuthorsWithBookCountAsync() =>
+        _repo.GetAuthorsWithBookCountAsync();
+
+    public Task<IEnumerable<Author>> FindByNameAsync(string name) =>
+        _repo.FindByNameAsync(name);
 }

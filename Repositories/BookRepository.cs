@@ -1,39 +1,75 @@
+using LibraryManagement.Data;
 using LibraryManagement.Models;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Repositories;
 
 public class BookRepository : IBookRepository
 {
-    private readonly List<Book> _books = new();
-    private int _nextId = 1;
+    private readonly LibraryContext _context;
 
-    public IEnumerable<Book> GetAll() => _books;
-
-    public Book? GetById(int id) => _books.FirstOrDefault(b => b.Id == id);
-
-    public Book Add(Book book)
+    public BookRepository(LibraryContext context)
     {
-        book.Id = _nextId++;
-        _books.Add(book);
+        _context = context;
+    }
+
+    public async Task<IEnumerable<Book>> GetAllAsync()
+    {
+        return await _context.Books
+            .Include(b => b.Author)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<Book?> GetByIdAsync(int id)
+    {
+        return await _context.Books
+            .Include(b => b.Author)
+            .FirstOrDefaultAsync(b => b.Id == id);
+    }
+
+    public async Task<Book> AddAsync(Book book)
+    {
+        _context.Books.Add(book);
+        await _context.SaveChangesAsync();
         return book;
     }
 
-    public bool Update(Book book)
+    public async Task<bool> UpdateAsync(Book book)
     {
-        var existing = GetById(book.Id);
-        if (existing == null) return false;
-        existing.Title = book.Title;
-        existing.PublishedYear = book.PublishedYear;
-        existing.AuthorId = book.AuthorId;
+        var existingBook = await _context.Books.FindAsync(book.Id);
+        if (existingBook == null) return false;
+
+        _context.Entry(existingBook).CurrentValues.SetValues(book);
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var book = GetById(id);
+        var book = await _context.Books.FindAsync(id);
         if (book == null) return false;
-        _books.Remove(book);
+
+        _context.Books.Remove(book);
+        await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<IEnumerable<Book>> GetBooksAfterYearAsync(int year)
+    {
+        return await _context.Books
+            .Where(b => b.PublishedYear > year)
+            .Include(b => b.Author)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(int authorId)
+    {
+        return await _context.Books
+            .Where(b => b.AuthorId == authorId)
+            .Include(b => b.Author)
+            .AsNoTracking()
+            .ToListAsync();
     }
 }

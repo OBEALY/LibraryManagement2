@@ -16,25 +16,35 @@ public class BookService
         _authors = authors;
     }
 
-    public IEnumerable<Book> GetAll() => _books.GetAll();
-    public Book? GetById(int id) => _books.GetById(id);
+    public Task<IEnumerable<Book>> GetAllAsync() => _books.GetAllAsync();
+    public Task<Book?> GetByIdAsync(int id) => _books.GetByIdAsync(id);
 
-    public Book Add(Book book)
+    public async Task<Book> AddAsync(Book book)
     {
         if (string.IsNullOrWhiteSpace(book.Title))
             throw new ArgumentException("Название книги не может быть пустым.");
-        if (_authors.GetById(book.AuthorId) == null)
+
+        var author = await _authors.GetByIdAsync(book.AuthorId);
+        if (author == null)
             throw new KeyNotFoundException("Указанный автор не найден.");
 
-        return _books.Add(book);
+        return await _books.AddAsync(book);
     }
 
-    public bool Update(Book book)
+    public async Task<bool> UpdateAsync(Book book)
     {
         if (string.IsNullOrWhiteSpace(book.Title))
             throw new ArgumentException("Название книги не может быть пустым.");
-        return _books.Update(book);
+
+        return await _books.UpdateAsync(book);
     }
 
-    public bool Delete(int id) => _books.Delete(id);
+    public Task<bool> DeleteAsync(int id) => _books.DeleteAsync(id);
+
+    // Новые методы для LINQ-запросов
+    public Task<IEnumerable<Book>> GetBooksAfterYearAsync(int year) =>
+        _books.GetBooksAfterYearAsync(year);
+
+    public Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(int authorId) =>
+        _books.GetBooksByAuthorIdAsync(authorId);
 }

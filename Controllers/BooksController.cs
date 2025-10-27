@@ -1,7 +1,6 @@
 using LibraryManagement.Models;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 
 namespace LibraryManagement.Controllers;
@@ -15,21 +14,21 @@ public class BooksController : ControllerBase
     public BooksController(BookService service) => _service = service;
 
     [HttpGet]
-    public IActionResult GetAll() => Ok(_service.GetAll());
+    public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
     [HttpGet("{id:int}")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var book = _service.GetById(id);
+        var book = await _service.GetByIdAsync(id);
         return book == null ? NotFound() : Ok(book);
     }
 
     [HttpPost]
-    public IActionResult Create(Book book)
+    public async Task<IActionResult> Create(Book book)
     {
         try
         {
-            var created = _service.Add(book);
+            var created = await _service.AddAsync(book);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
         catch (ArgumentException ex)
@@ -43,13 +42,13 @@ public class BooksController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public IActionResult Update(int id, Book book)
+    public async Task<IActionResult> Update(int id, Book book)
     {
         if (id != book.Id) return BadRequest("ID mismatch");
 
         try
         {
-            if (!_service.Update(book)) return NotFound();
+            if (!await _service.UpdateAsync(book)) return NotFound();
             return NoContent();
         }
         catch (ArgumentException ex)
@@ -59,8 +58,17 @@ public class BooksController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        return _service.Delete(id) ? NoContent() : NotFound();
+        return await _service.DeleteAsync(id) ? NoContent() : NotFound();
     }
+
+    // Новые endpoints для LINQ-запросов
+    [HttpGet("after-year/{year:int}")]
+    public async Task<IActionResult> GetBooksAfterYear(int year) =>
+        Ok(await _service.GetBooksAfterYearAsync(year));
+
+    [HttpGet("by-author/{authorId:int}")]
+    public async Task<IActionResult> GetBooksByAuthor(int authorId) =>
+        Ok(await _service.GetBooksByAuthorIdAsync(authorId));
 }

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- Необязательно: можно указать запуск Swagger по умолчанию -->
+		<RootNamespace>LibraryManagement</RootNamespace>
+		<AssemblyName>LibraryManagement</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Пакет для Swagger UI -->
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	</ItemGroup>
+
+</Project>

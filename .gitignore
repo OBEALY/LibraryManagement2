@@ -1,0 +1,11 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+*.cache
+*.swp
+*.pyc
+__pycache__/
+appsettings.Development.json

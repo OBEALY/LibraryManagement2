@@ -15,7 +15,7 @@ public class AuthorService : IAuthorService
     public async Task<Author> AddAsync(Author author)
     {
         if (string.IsNullOrWhiteSpace(author.Name))
-            throw new ArgumentException("Имя автора не может быть пустым.");
+            throw new ArgumentException("РРјСЏ Р°РІС‚РѕСЂР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.");
 
         return await _repo.AddAsync(author);
     }
@@ -23,7 +23,7 @@ public class AuthorService : IAuthorService
     public async Task<bool> UpdateAsync(Author author)
     {
         if (string.IsNullOrWhiteSpace(author.Name))
-            throw new ArgumentException("Имя автора не может быть пустым.");
+            throw new ArgumentException("РРјСЏ Р°РІС‚РѕСЂР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.");
 
         return await _repo.UpdateAsync(author);
     }

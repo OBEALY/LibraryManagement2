@@ -20,18 +20,18 @@ public class LibraryContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Author>().HasData(
-            new Author { Id = 1, Name = "Лев Толстой", DateOfBirth = new DateTime(1828, 9, 9) },
-            new Author { Id = 2, Name = "Фёдор Достоевский", DateOfBirth = new DateTime(1821, 11, 11) },
-            new Author { Id = 3, Name = "Антон Чехов", DateOfBirth = new DateTime(1860, 1, 29) }
+            new Author { Id = 1, Name = "Р›РµРІ РўРѕР»СЃС‚РѕР№", DateOfBirth = new DateTime(1828, 9, 9) },
+            new Author { Id = 2, Name = "Р¤С‘РґРѕСЂ Р”РѕСЃС‚РѕРµРІСЃРєРёР№", DateOfBirth = new DateTime(1821, 11, 11) },
+            new Author { Id = 3, Name = "РђРЅС‚РѕРЅ Р§РµС…РѕРІ", DateOfBirth = new DateTime(1860, 1, 29) }
         );
 
         modelBuilder.Entity<Book>().HasData(
-            new Book { Id = 1, Title = "Война и мир", PublishedYear = 1869, AuthorId = 1 },
-            new Book { Id = 2, Title = "Анна Каренина", PublishedYear = 1877, AuthorId = 1 },
-            new Book { Id = 3, Title = "Преступление и наказание", PublishedYear = 1866, AuthorId = 2 },
-            new Book { Id = 4, Title = "Братья Карамазовы", PublishedYear = 1880, AuthorId = 2 },
-            new Book { Id = 5, Title = "Вишнёвый сад", PublishedYear = 1904, AuthorId = 3 },
-            new Book { Id = 6, Title = "Три сестры", PublishedYear = 1901, AuthorId = 3 }
+            new Book { Id = 1, Title = "Р’РѕР№РЅР° Рё РјРёСЂ", PublishedYear = 1869, AuthorId = 1 },
+            new Book { Id = 2, Title = "РђРЅРЅР° РљР°СЂРµРЅРёРЅР°", PublishedYear = 1877, AuthorId = 1 },
+            new Book { Id = 3, Title = "РџСЂРµСЃС‚СѓРїР»РµРЅРёРµ Рё РЅР°РєР°Р·Р°РЅРёРµ", PublishedYear = 1866, AuthorId = 2 },
+            new Book { Id = 4, Title = "Р‘СЂР°С‚СЊСЏ РљР°СЂР°РјР°Р·РѕРІС‹", PublishedYear = 1880, AuthorId = 2 },
+            new Book { Id = 5, Title = "Р’РёС€РЅС‘РІС‹Р№ СЃР°Рґ", PublishedYear = 1904, AuthorId = 3 },
+            new Book { Id = 6, Title = "РўСЂРё СЃРµСЃС‚СЂС‹", PublishedYear = 1901, AuthorId = 3 }
         );
     }
 }

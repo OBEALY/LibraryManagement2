@@ -1,4 +1,5 @@
 ﻿using LibraryManagement.Data;
+using LibraryManagement.Middlewares;
 using LibraryManagement.Repositories;
 using LibraryManagement.Services;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,6 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Конфигурация MySQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "Server=localhost;Database=LibraryManagement;User=root;Password=1234;";
 
@@ -17,7 +17,6 @@ builder.Services.AddDbContext<LibraryContext>(options =>
     options.EnableDetailedErrors();
 });
 
-// Настройка JSON сериализации для избежания циклических ссылок
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -35,17 +34,19 @@ builder.Services.AddSwaggerGen(c =>
 // Регистрация репозиториев и сервисов
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<AuthorService>();
-builder.Services.AddScoped<BookService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 var app = builder.Build();
+
+// Глобальный обработчик исключений
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
 
-// Создание и применение миграций автоматически
 using (var scope = app.Services.CreateScope())
 {
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();

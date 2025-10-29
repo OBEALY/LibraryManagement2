@@ -13,14 +13,12 @@ public class LibraryContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Конфигурация связи один-ко-многим
         modelBuilder.Entity<Author>()
             .HasMany(a => a.Books)
             .WithOne(b => b.Author)
             .HasForeignKey(b => b.AuthorId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Seed данные
         modelBuilder.Entity<Author>().HasData(
             new Author { Id = 1, Name = "Лев Толстой", DateOfBirth = new DateTime(1828, 9, 9) },
             new Author { Id = 2, Name = "Фёдор Достоевский", DateOfBirth = new DateTime(1821, 11, 11) },

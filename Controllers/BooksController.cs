@@ -1,7 +1,6 @@
 using LibraryManagement.Models;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace LibraryManagement.Controllers;
 
@@ -9,9 +8,9 @@ namespace LibraryManagement.Controllers;
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
-    private readonly BookService _service;
+    private readonly IBookService _service;
 
-    public BooksController(BookService service) => _service = service;
+    public BooksController(IBookService service) => _service = service;
 
     [HttpGet]
     public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
@@ -26,19 +25,8 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Book book)
     {
-        try
-        {
-            var created = await _service.AddAsync(book);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var created = await _service.AddAsync(book);
+        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id:int}")]
@@ -46,24 +34,17 @@ public class BooksController : ControllerBase
     {
         if (id != book.Id) return BadRequest("ID mismatch");
 
-        try
-        {
-            if (!await _service.UpdateAsync(book)) return NotFound();
-            return NoContent();
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var updated = await _service.UpdateAsync(book);
+        return updated ? NoContent() : NotFound();
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        return await _service.DeleteAsync(id) ? NoContent() : NotFound();
+        var deleted = await _service.DeleteAsync(id);
+        return deleted ? NoContent() : NotFound();
     }
 
-    // Новые endpoints для LINQ-запросов
     [HttpGet("after-year/{year:int}")]
     public async Task<IActionResult> GetBooksAfterYear(int year) =>
         Ok(await _service.GetBooksAfterYearAsync(year));

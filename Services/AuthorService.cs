@@ -1,10 +1,9 @@
 using LibraryManagement.Models;
 using LibraryManagement.Repositories;
-using System;
 
 namespace LibraryManagement.Services;
 
-public class AuthorService
+public class AuthorService : IAuthorService
 {
     private readonly IAuthorRepository _repo;
 
@@ -31,7 +30,6 @@ public class AuthorService
 
     public Task<bool> DeleteAsync(int id) => _repo.DeleteAsync(id);
 
-    // Новые методы для LINQ-запросов
     public Task<IEnumerable<Author>> GetAuthorsWithBookCountAsync() =>
         _repo.GetAuthorsWithBookCountAsync();
 

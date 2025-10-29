@@ -1,11 +1,9 @@
 using LibraryManagement.Models;
 using LibraryManagement.Repositories;
-using System;
-using System.Collections.Generic;
 
 namespace LibraryManagement.Services;
 
-public class BookService
+public class BookService : IBookService
 {
     private readonly IBookRepository _books;
     private readonly IAuthorRepository _authors;
@@ -41,7 +39,6 @@ public class BookService
 
     public Task<bool> DeleteAsync(int id) => _books.DeleteAsync(id);
 
-    // Новые методы для LINQ-запросов
     public Task<IEnumerable<Book>> GetBooksAfterYearAsync(int year) =>
         _books.GetBooksAfterYearAsync(year);
 

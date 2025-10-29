@@ -16,6 +16,5 @@ public class Author
     [Required]
     public DateTime DateOfBirth { get; set; }
 
-    // Навигационное свойство
     public virtual ICollection<Book> Books { get; set; } = new List<Book>();
 }

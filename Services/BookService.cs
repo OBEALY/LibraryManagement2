@@ -20,11 +20,11 @@ public class BookService : IBookService
     public async Task<Book> AddAsync(Book book)
     {
         if (string.IsNullOrWhiteSpace(book.Title))
-            throw new ArgumentException("Название книги не может быть пустым.");
+            throw new ArgumentException("РќР°Р·РІР°РЅРёРµ РєРЅРёРіРё РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.");
 
         var author = await _authors.GetByIdAsync(book.AuthorId);
         if (author == null)
-            throw new KeyNotFoundException("Указанный автор не найден.");
+            throw new KeyNotFoundException("РЈРєР°Р·Р°РЅРЅС‹Р№ Р°РІС‚РѕСЂ РЅРµ РЅР°Р№РґРµРЅ.");
 
         return await _books.AddAsync(book);
     }
@@ -32,7 +32,7 @@ public class BookService : IBookService
     public async Task<bool> UpdateAsync(Book book)
     {
         if (string.IsNullOrWhiteSpace(book.Title))
-            throw new ArgumentException("Название книги не может быть пустым.");
+            throw new ArgumentException("РќР°Р·РІР°РЅРёРµ РєРЅРёРіРё РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј.");
 
         return await _books.UpdateAsync(book);
     }
